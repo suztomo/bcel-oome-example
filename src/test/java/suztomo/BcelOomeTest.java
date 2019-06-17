@@ -11,6 +11,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 import org.apache.bcel.util.ClassPath;
 import org.apache.bcel.util.ClassPathRepository;
+import org.apache.bcel.util.LruCacheClassPathRepository;
 import org.apache.bcel.util.MemorySensitiveClassPathRepository;
 import org.apache.bcel.util.Repository;
 import org.junit.Before;
@@ -37,6 +38,11 @@ public class BcelOomeTest {
   @Test
   public void testMemorySensitiveClassPathRepository() throws Exception {
     iterateAllJavaClass(new MemorySensitiveClassPathRepository(classPath()));
+  }
+
+  @Test
+  public void testLruCacheClassPathRepository() throws Exception {
+    iterateAllJavaClass(new LruCacheClassPathRepository(classPath(), 1000));
   }
 
   private void iterateAllJavaClass(Repository repository) throws Exception {
