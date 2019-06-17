@@ -1,11 +1,7 @@
 package suztomo;
 
-import static org.junit.Assert.assertTrue;
-
-
 import com.google.common.reflect.ClassPath.ClassInfo;
 import java.io.File;
-import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLClassLoader;
 import java.nio.file.Path;
@@ -13,10 +9,10 @@ import java.nio.file.Paths;
 import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
-import org.apache.bcel.util.MemorySensitiveClassPathRepository;
-import org.apache.bcel.util.Repository;
 import org.apache.bcel.util.ClassPath;
 import org.apache.bcel.util.ClassPathRepository;
+import org.apache.bcel.util.MemorySensitiveClassPathRepository;
+import org.apache.bcel.util.Repository;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -25,7 +21,7 @@ import org.junit.Test;
  */
 public class BcelOomeTest {
 
-  File[] jars;
+  private File[] jars;
 
   @Before
   public void setup() {
@@ -56,7 +52,7 @@ public class BcelOomeTest {
         .collect(Collectors.joining(":")));
   }
 
-  private List<String> classNames(File jar) throws Exception {
+  private static List<String> classNames(File jar) throws Exception {
     URL jarUrl = jar.toURI().toURL();
     // Setting parent as null because we don't want other classes than this jar file
     URLClassLoader classLoaderFromJar = new URLClassLoader(new URL[]{jarUrl}, null);
