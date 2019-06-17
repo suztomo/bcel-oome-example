@@ -1,12 +1,12 @@
 # BCEL ClassPathRepository OutOfMemoryError Example
 
 This project supports the background of [BCEL-320](https://issues.apache.org/jira/browse/BCEL-320):
-A new ClassPathRepository that can scan many (more than 200) JAR files without OutOfMemoryError.
+"A new ClassPathRepository that can scan many JAR files without OutOfMemoryError".
 
 This project configures Java heap size for the JUnit test (`-Xmx256m`) to easily observe
 OutOfMemoryError.
 
-# Test
+# Run
 
 ## Test with ClassPathRepository
 ```
@@ -59,7 +59,7 @@ java.lang.OutOfMemoryError: GC overhead limit exceeded
 
 BCEL 3.6.1
 
-Linux 
+OS: Linux 
 
 OpenJDK 1.8.0_181 (Google-build)
 
@@ -71,9 +71,9 @@ from its class path. When there are many JavaClass, the map may exceeds the size
 
 Existing MemorySensitiveClassPathRepository is intended to help such situation by using
 SoftReference. However when the size of the JavaClass map is huge, it still causes OutOfMemoryError
-due to too much garbage collection time. I think this is related to
-[JDK-6912889 : SoftReferences cause worst-case garbage collection](
-https://bugs.java.com/bugdatabase/view_bug.do?bug_id=6912889).
+due to too much garbage collection time. I think this MemorySensitiveClassPathRepository's behavior
+is related to [JDK-6912889 : SoftReferences cause worst-case garbage collection](
+https://bugs.java.com/bugdatabase/view_bug.do?bug_id=6912889) (Won't Fix).
 
 # License
 
