@@ -4,12 +4,20 @@ import static org.junit.Assert.assertTrue;
 
 
 import com.google.common.reflect.ClassPath.ClassInfo;
+import java.io.File;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLClassLoader;
 import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
+import org.apache.bcel.util.MemorySensitiveClassPathRepository;
+import org.apache.bcel.util.Repository;
+import org.apache.bcel.util.ClassPath;
+import org.apache.bcel.util.ClassPathRepository;
+import org.junit.Before;
 import org.junit.Test;
 
 /**
@@ -17,13 +25,39 @@ import org.junit.Test;
  */
 public class BcelOomeTest {
 
-  @Test
-  public void shouldAnswerWithTrue() {
-    assertTrue(true);
+  File[] jars;
+
+  @Before
+  public void setup() {
+    Path resourcesDirectory = Paths.get("src", "test", "resources");
+    jars = resourcesDirectory.toFile().listFiles();
   }
 
-  List<String> classNames(Path jar) throws Exception {
-    URL jarUrl = jar.toUri().toURL();
+  @Test
+  public void testClassPathRepository() throws Exception {
+    iterateAllJavaClass(new ClassPathRepository(classPath()));
+  }
+
+  @Test
+  public void testMemorySensitiveClassPathRepository() throws Exception {
+    iterateAllJavaClass(new MemorySensitiveClassPathRepository(classPath()));
+  }
+
+  private void iterateAllJavaClass(Repository repository) throws Exception {
+    for (File jar : jars) {
+      for (String className : classNames(jar)) {
+        repository.loadClass(className);
+      }
+    }
+  }
+
+  private ClassPath classPath() {
+    return new ClassPath(Arrays.stream(jars).map(file -> file.getAbsolutePath())
+        .collect(Collectors.joining(":")));
+  }
+
+  private List<String> classNames(File jar) throws Exception {
+    URL jarUrl = jar.toURI().toURL();
     // Setting parent as null because we don't want other classes than this jar file
     URLClassLoader classLoaderFromJar = new URLClassLoader(new URL[]{jarUrl}, null);
 
@@ -34,4 +68,5 @@ public class BcelOomeTest {
         .map(ClassInfo::getName)
         .collect(Collectors.toList());
   }
+
 }
